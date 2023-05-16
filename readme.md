@@ -1,5 +1,5 @@
 # process_sniffer
-
+packet sniffer of specific process with wireshark!
 ## Setup
 1. Install wireshark
 2. install Python dependencies
