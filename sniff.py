@@ -35,7 +35,7 @@ def on_arrive(pkt: Packet):
         if not c.raddr.port == src_port and c.laddr.port == dst_port: # compare netstat ports with packet ports
             continue
         # sys.stderr.write(c.raddr.ip)
-        sys.stderr.flush()
+        # sys.stderr.flush()
         writer.write(pkt)
         writer.flush()
     
