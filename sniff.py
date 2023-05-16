@@ -5,8 +5,12 @@ import psutil
 import contextlib
 import argparse
 
-
+parser = argparse.ArgumentParser(prog='Packet sniffer')
+parser.add_argument('-p', type=str, required=True, help='Process name to capture')
+args = parser.parse_args()
+process_name: str = args.p
 writer = PcapWriter(sys.stdout.buffer) # write into stdout
+
 
 def get_pids(proc_name):
     pids = []
@@ -15,12 +19,14 @@ def get_pids(proc_name):
             pids.append(i.pid)
     return pids
 
+
 def on_arrive(pkt: Packet):
     ip_layer = pkt.getlayer(IP)
     if not ip_layer:
         return
     src_port = ip_layer.sport
     dst_port = ip_layer.dport
+    pids = get_pids(process_name)
     for c in psutil.net_connections(kind='inet'):
         if not c.pid in pids:
             continue
@@ -34,11 +40,6 @@ def on_arrive(pkt: Packet):
         writer.flush()
     
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(prog='Packet sniffer')
-    parser.add_argument('-p', type=str, required=True, help='Process name to capture')
-    args = parser.parse_args()
-    process_name: str = args.p
-    pids = get_pids(process_name)
+if __name__ == '__main__':    
     with contextlib.closing(writer): # auto close stdout writer in the end
         sniff(prn=on_arrive)
