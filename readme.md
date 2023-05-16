@@ -13,7 +13,8 @@ pip3 install -r requirements.txt
 
 
 ## Usage:
-redirect stdout from Python into wireshark
+redirect stdout from Python into wireshark  
+from `cmd` (only `cmd` support pipe):
 ```shell
 python sniff.py -p chrome.exe | "C:\Program Files\Wireshark\Wireshark.exe" -k -i -
 ```
